@@ -23,17 +23,43 @@ const selection = [
     },
 ];
 
+
+//User Selection function:
 function init() {
     inquirer
         .prompt(selection)
         .then((data) => {
-            if (data.selection === 'View Departments'){
-                db.query('SELECT * FROM department', function (err, results) {
-                    console.log(results);
-                });
-            }
+                if (data.selection === 'View Departments'){
+                    db.query('SELECT * FROM department', function (err, results) {
+                        console.log(results);
+                    });
+                } else if (data.selection === 'View Roles'){
+                    db.query('SELECT * FROM roles', function (err, results) {
+                        console.log(results);
+                    })
+                } else if (data.selection === 'View Employees'){
+                    db.query('SELECT * FROM employee', function (err, results) {
+                        console.log(results);
+                    })
+                } else if (data.selection === 'Add Department'){
+                    db.query('CODE', function (err, results) {
+                        console.log(results);
+                    })
+                } else if (data.selection === 'Add a Role'){
+                    db.query('CODE', function (err, results) {
+                        console.log(results);
+                    })
+                } else if (data.selection === 'Add an Employee'){
+                    db.query('CODE', function (err, results) {
+                        console.log(results);
+                    })
+                } else {
+                    db.query('CODE', function (err, results) {
+                        console.log(results);
+                    })
+                }
         })
-}
+};
 
 //call function
 init();
