@@ -4,7 +4,7 @@ CREATE DATABASE organization_db;
 USE organization_db;
 
 CREATE TABLE department (
-  id INT NOT NULL,
+  id INT NOT NULL AUTO_INCREMENT,
   dept_name VARCHAR(30),
   PRIMARY KEY (id)
 );

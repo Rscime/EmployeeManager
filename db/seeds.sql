@@ -1,8 +1,8 @@
-INSERT INTO department (id, dept_name)
-VALUES  (001, 'HR'),
-        (002, 'Feild Science'),
-        (003, 'Geospatial'),
-        (004, 'Marketing');
+INSERT INTO department (dept_name)
+VALUES  ('HR'),
+        ('Feild Science'),
+        ('Geospatial'),
+        ('Marketing');
 
 INSERT INTO roles (id, role_title, salary, dept_id)
 VALUES  (001, 'HR Manager', 75000.00, 001),
