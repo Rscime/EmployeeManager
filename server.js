@@ -19,7 +19,7 @@ const selection = [
         type:'list',
         name: 'selection',
         message: 'What would you like to do?',
-        choices: ['View Departments', 'View Roles', 'View Employees', 'Add Department', 'Add a Role', 'Add an Employee', 'Update Employee Role'],
+        choices: ['View Departments', 'View Roles', 'View Employees', 'Add Department', 'Add a Role', 'Add an Employee', 'Update Employee Role', 'QUIT'],
     },
 ];
 
@@ -30,27 +30,36 @@ function init() {
         .prompt(selection)
         .then((data) => {
                 if (data.selection === 'View Departments'){
-                    db.query('SELECT * FROM department', function (err, results) {
+                    db.query('SELECT * FROM department', (err, results) => {
                         if (err){
                             console.log('Error pulling table');
                         } else{
-                            console.log(results);
+                            console.log('');
+                            console.log('Departments:');
+                            console.table(results);
+                            init();
                         }
                     });
                 } else if (data.selection === 'View Roles'){
-                    db.query('SELECT * FROM roles', function (err, results) {
+                    db.query('SELECT * FROM roles', (err, results) => {
                         if (err){
                             console.log('Error pulling table');
                         } else{
-                            console.log(results);
+                            console.log('');
+                            console.log('Roles:');
+                            console.table(results);
+                            init();
                         }
                     })
                 } else if (data.selection === 'View Employees'){
-                    db.query('SELECT * FROM employee', function (err, results) {
+                    db.query('SELECT * FROM employee', (err, results) => {
                         if (err){
                             console.log('Error pulling table');
                         } else{
-                            console.log(results);
+                            console.log('');
+                            console.log('Employees:');
+                            console.table(results);
+                            init();
                         }
                     })
                 } else if (data.selection === 'Add Department'){
@@ -63,11 +72,19 @@ function init() {
                             }
                         ])
                         .then((data) => 
-                                db.query('INSERT INTO department (dept_name) VALUES (?)', [data.department], function (err, results) { 
+                                db.query('INSERT INTO department (dept_name) VALUES (?)', [data.department], (err, results) => { 
                                     if (err){
                                         console.log('Error adding department to table');
                                     } else{
-                                        console.log(results);
+                                        console.log('Department Successfully Added');
+                                        db.query('SELECT * FROM department', (err, results) => {
+                                            if (err){
+                                                console.log('Error pulling table');
+                                            } else{
+                                                console.log('Department added to table');
+                                                init();
+                                            }
+                                        })
                                     }
                                 }))
                 } else if (data.selection === 'Add a Role'){
@@ -95,11 +112,12 @@ function init() {
                             }
                         ])
                         .then((data) => 
-                                db.query('INSERT INTO roles (id, role_title, salary, dept_id) VALUES (?)', [data.id, data.role, data.salary, data.dept_id], function (err, results) { 
+                                db.query('INSERT INTO roles (id, role_title, salary, dept_id) VALUES (?,?,?,?)', [data.id, data.role, data.salary, data.dept_id], (err, results) => { 
                                     if (err){
                                         console.log('Error adding role to table');
                                     } else{
-                                        console.log(results);
+                                        console.log('Role added to table');
+                                        init();
                                     }
                                 }))
                 } else if (data.selection === 'Add an Employee'){
@@ -132,17 +150,40 @@ function init() {
                             }
                         ])
                         .then((data) => 
-                                db.query('INSERT INTO employee (id, first_name, last_name, role_id, manager_id) VALUES (?)', [data.id, data.first, data.last, data.role_id, data.manager_id], function (err, results) { 
+                                db.query('INSERT INTO employee (id, first_name, last_name, role_id, manager_id) VALUES (?,?,?,?,?)', [data.id, data.first, data.last, data.role_id, data.manager_id], (err, results) => { 
                                     if (err){
-                                        console.log('Error adding new employee to table');
+                                        console.log('Error adding employee to table');
                                     } else{
-                                        console.log(results);
+                                        console.log('Employee Successfully Added');
+                                        init();
                                     }
                                 }))
-                } else {
-                    db.query('CODE', function (err, results) {
-                        console.log(results);
-                    })
+                } else if (data.selection === 'Update Employee Role') {
+                    inquirer
+                        .prompt([
+                            {
+                                type: 'input',
+                                name: 'name',
+                                message: 'What is that last name of the employee you woulld like to update?'
+                            },
+                            {
+                                type: 'input',
+                                name: 'role',
+                                message: 'What is the title of thier new role?'
+                            },
+                        ])
+                        .then((data) => 
+                            db.query('UPDATE employee SET ? WHERE ?', [{role_title: role}, {last_name: name}], (err, results) => {
+                                if (err){
+                                    console.log('Error updating employee');
+                                } else{
+                                    console.log('Employee role successfully updated');
+                                    init();
+                                }
+                            }) 
+                        )
+                }else {
+                   console.log("Thank you for using the Employee Manager");
                 }
         })
 };
